@@ -9,8 +9,11 @@
 ---
 
 ## 팀명·팀원·학부 / Team, members, department
-
-
+ICT융합학부
+강준우
+김형인
+박태현
+최지범
 
 ## 연락 규칙 / Contact rule — 어디로, 몇 시간 내 응답
 
