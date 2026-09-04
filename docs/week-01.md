@@ -3,7 +3,7 @@
 **팀 규칙 세우기 / Setting team rules**
 
 - 작성일 / Date: 2026-09-04
-- 참여자 / Present: 
+- 참여자 / Present: 김형인,강준우,박태현
 - 최종 반영 / Feeds into: docs/team-rules.md
 
 ---
