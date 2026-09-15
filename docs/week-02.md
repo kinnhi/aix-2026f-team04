@@ -290,18 +290,185 @@ A조처럼 검색 가능한 화면만 만들어도 끝났다고 판단하는 상
 
 위 2번의 프롬프트 원문을 저장소의 `PROMPTS.md`에 추가하고 커밋하세요.
 
-```markdown
-## 2026-__-__ · 메모 검색 기능 (2주차 활동)
+````markdown
+## 2026-09-09 · 메모 검색 기능 (2주차 활동)
 
 **지시**
 (붙여넣은 프롬프트 원문)
+A조 프롬프트
+```
+메모 검색 기능 만들어줘. 제목이랑 본문에서 키워드로 찾을 수 있게.
+```
+B조 프롬프트
+```
+[지시]
+메모 검색 기능을 추가해줘. 제목과 본문에서 키워드로 검색된다.
 
+[규약]
+(CONVENTIONS.md 내용 전체를 붙여넣기)
+# 프로젝트 규약
+
+이 문서는 코드를 작성할 때 지켜야 할 규칙입니다.
+
+## 계층 분리
+
+- `routes.js`는 HTTP 요청과 응답만 다룹니다. SQL을 직접 쓰지 않습니다.
+- 데이터베이스 접근은 `service.js`에만 둡니다.
+
+## 응답 형식
+
+모든 응답은 다음 두 형태 중 하나입니다.
+
+```json
+{ "ok": true,  "data": ... }
+{ "ok": false, "error": "ERROR_CODE" }
+```
+
+에러 코드는 대문자와 밑줄로 씁니다. (예: `MEMO_NOT_FOUND`)
+
+## 명명 규칙
+
+- 함수명은 동사로 시작합니다. `list`, `get`, `create`, `update`, `remove`
+- 데이터베이스 컬럼은 스네이크 케이스를 씁니다. `user_id`, `created_at`
+- 자바스크립트 변수는 카멜 케이스를 씁니다. `userId`, `createdAt`
+
+## 입력 검증
+
+- 사용자 입력은 반드시 검증합니다.
+- 검증에 실패하면 400과 함께 `{ ok: false, error }` 를 반환합니다.
+
+## 권한
+
+- 모든 조회와 수정은 **본인 소유 데이터로 한정**합니다.
+- 모든 쿼리에 `user_id` 조건을 포함합니다.
+
+
+[근거]
+(schema.sql, service.js, routes.js 내용 전체를 붙여넣기)
+//schema.sql
+# 프로젝트 규약
+
+이 문서는 코드를 작성할 때 지켜야 할 규칙입니다.
+
+## 계층 분리
+
+- `routes.js`는 HTTP 요청과 응답만 다룹니다. SQL을 직접 쓰지 않습니다.
+- 데이터베이스 접근은 `service.js`에만 둡니다.
+
+## 응답 형식
+
+모든 응답은 다음 두 형태 중 하나입니다.
+
+```json
+{ "ok": true,  "data": ... }
+{ "ok": false, "error": "ERROR_CODE" }
+```
+
+에러 코드는 대문자와 밑줄로 씁니다. (예: `MEMO_NOT_FOUND`)
+
+## 명명 규칙
+
+- 함수명은 동사로 시작합니다. `list`, `get`, `create`, `update`, `remove`
+- 데이터베이스 컬럼은 스네이크 케이스를 씁니다. `user_id`, `created_at`
+- 자바스크립트 변수는 카멜 케이스를 씁니다. `userId`, `createdAt`
+
+## 입력 검증
+
+- 사용자 입력은 반드시 검증합니다.
+- 검증에 실패하면 400과 함께 `{ ok: false, error }` 를 반환합니다.
+
+## 권한
+
+- 모든 조회와 수정은 **본인 소유 데이터로 한정**합니다.
+- 모든 쿼리에 `user_id` 조건을 포함합니다.
+//service.js
+const db = require('./db');
+
+/**
+ * 사용자의 메모 목록을 최신순으로 조회한다.
+ */
+function listMemos(userId) {
+  return db.all(
+    `SELECT id, title, created_at
+       FROM memos
+      WHERE user_id = ?
+      ORDER BY created_at DESC`,
+    [userId]
+  );
+}
+
+/**
+ * 메모 한 건을 조회한다. 본인 메모가 아니면 null을 반환한다.
+ */
+function getMemo(userId, memoId) {
+  return db.get(
+    `SELECT id, title, body, created_at
+       FROM memos
+      WHERE id = ? AND user_id = ?`,
+    [memoId, userId]
+  );
+}
+
+/**
+ * 메모를 생성한다.
+ */
+function createMemo(userId, title, body) {
+  return db.run(
+    `INSERT INTO memos (user_id, title, body, created_at)
+     VALUES (?, ?, ?, datetime('now'))`,
+    [userId, title, body]
+  );
+}
+
+module.exports = { listMemos, getMemo, createMemo };
+//routes.js
+const express = require('express');
+const service = require('./service');
+
+const router = express.Router();
+
+// 메모 목록 조회
+router.get('/memos', async (req, res) => {
+  const memos = await service.listMemos(req.user.id);
+  res.json({ ok: true, data: memos });
+});
+
+// 메모 단건 조회
+router.get('/memos/:id', async (req, res) => {
+  const memo = await service.getMemo(req.user.id, req.params.id);
+
+  if (!memo) {
+    return res.status(404).json({ ok: false, error: 'MEMO_NOT_FOUND' });
+  }
+
+  res.json({ ok: true, data: memo });
+});
+
+// 메모 생성
+router.post('/memos', async (req, res) => {
+  const { title, body } = req.body;
+
+  if (!title || !body) {
+    return res.status(400).json({ ok: false, error: 'TITLE_AND_BODY_REQUIRED' });
+  }
+
+  const result = await service.createMemo(req.user.id, title, body);
+  res.status(201).json({ ok: true, data: { id: result.lastID } });
+});
+
+module.exports = router;
+
+[종료조건]
+- GET /memos/search?q=키워드 로 호출된다
+- 제목 또는 본문에 키워드가 포함된 메모만 반환한다
+- 본인 메모만 반환한다
+- q가 비어 있으면 400과 { ok: false, error } 를 반환한다
+```
 **채택 여부**
-(전체 채택 / 일부 채택 — 무엇을 어떻게 수정했는지 / 미채택)
+전체 채택
 
 **참고**
-(있으면)
-```
+(있으면)````
 
 - [x]  `PROMPTS.md`에 추가하고 커밋했습니다
 
