@@ -13,6 +13,7 @@ Principle: record your **reasoning**, not just prompts.
 - 실패 조건 Failure: q가 없거나 빈 문자열이면 400과 함께 { ok: false, error: 'QUERY_REQUIRED' } 반환 (에러 코드는 CONVENTIONS.md 명명 규칙에 맞춰 대문자+밑줄)
 
 **요청한 프롬프트 요지 / Prompt (summary)**
+
 A조 프롬프트
 ``` markdown
 메모 검색 기능 만들어줘. 제목이랑 본문에서 키워드로 찾을 수 있게.
@@ -99,6 +100,7 @@ B조 프롬프트
 
 - 모든 조회와 수정은 **본인 소유 데이터로 한정**합니다.
 - 모든 쿼리에 `user_id` 조건을 포함합니다.
+``` javascript
 //service.js
 const db = require('./db');
 
@@ -175,7 +177,7 @@ router.post('/memos', async (req, res) => {
 });
 
 module.exports = router;
-
+```
 [종료조건]
 - GET /memos/search?q=키워드 로 호출된다
 - 제목 또는 본문에 키워드가 포함된 메모만 반환한다
