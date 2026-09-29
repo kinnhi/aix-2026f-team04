@@ -2,24 +2,26 @@
 
 **주제 선택과 요구 명세 / Choosing a problem & writing the spec**
 
-- 작성일 / Date: 
-- 참여자 / Present: 
+- 작성일 / Date: 2026/09/23
+- 참여자 / Present: 강준우, 김형인, 박태현, 최지범
 
 ---
 
 ## ① 주제 선택 / Choosing one problem
 
 | 항목 Item | 내용 |
-|---|---|
-| 선택한 주제 Chosen |  |
-| 선택 근거 Why |  |
+| --- | --- |
+| 선택한 주제 Chosen | Freshman Simulator |
+| 선택 근거 Why | 나와있는 아이디어 중 구체화가 가장 잘되어있었고, 참신했음 |
 
 ## ② 성공 기준 가져오기 / Success criteria from Week 3
 
 | 3주차 성공 기준 원문 Original (Week 3) | 모호한 표현 Vague words |
-|---|---|
+| --- | --- |
 | *(예시) 학생들이 과제 제출 현황을 쉽게 확인할 수 있다* | *쉽게, 확인할 수 있다* |
-|  |  |
+| 시뮬레이션 완주율 70% 이상| 완주율 |
+| 수강신청 관련 학사팀 문의 30% 감소 | 관련, 감소 |
+| 개강 첫 주 "강의실 못 찾음" 응답이 미참여자의 절반 수준 | 응답, 절반 수준 |
 
 ## ③ Acceptance Criteria
 
@@ -27,18 +29,22 @@
 At least two normal paths + one failure path. If "How to check" is empty, it is not yet a spec.
 
 | # | 경로 Path | EARS 문장 Sentence | 판정 방법 How to check |
-|---|---|---|---|
+| --- | --- | --- | --- |
 | *예시* | *정상* | *WHEN 학생이 과제 목록을 열면 THE 시스템은 SHALL 과목별 미제출 과제를 마감일 순으로 표시한다* | *미제출 과제 3건을 만든 뒤 목록을 열어 마감일 순으로 나오는지 확인* |
-| AC-1 | 정상 Normal | WHEN  THE  SHALL  |  |
-| AC-2 | 정상 Normal | WHEN  THE  SHALL  |  |
-| AC-3 | 실패 Failure | IF  THEN THE  SHALL  |  |
+| AC-1 | 정상 Normal | WHEN 사용자가 수강신청 시뮬레이션에서 학기 최대 신청 학점을 넘는 과목을 장바구니에 담으면 THE 시뮬레이터는 SHALL 담기를 거부하고 같은 화면에 초과 학점 수와 최대 신청 학점을 표시한다 | 최대 학점을 18학점으로 설정한 테스트 시나리오에서 3학점 과목 6개를 담은 뒤 7번째 3학점 과목을 담는다. 장바구니가 6개 그대로이고 3학점 초과 / 최대 18학점 문구가 같은 화면에 뜨면 통과 |
+| AC-2 | 정상 Normal | WHEN 사용자가 시간표에 적힌 건물 약칭과 호실 코드를 입력하면 THE 시뮬레이터는 SHALL 3초 이내에 캠퍼스 지도 위 해당 건물 위치, 건물 정식 명칭, 호실이 있는 층을 표시한다 | 실제 1학년 시간표에서 뽑은 코드 5개를 모바일에서 하나씩 입력하고 스톱워치로 측정. 5개 모두 3초 이내에 뜨고 건물명·층이 학교 홈페이지 건물 안내와 일치하면 통과 |
+| AC-3 | 예외 Unwanted | IF 사용자가 시나리오 진행 중 앱을 종료하거나 네트워크가 끊기면 THEN THE 시뮬레이터는 SHALL 마지막으로 완료한 단계를 기기에 저장하고 다시 열었을 때 그 다음 단계부터 이어서 표시한다 | 5단계짜리 수강신청 시나리오에서 3단계까지 완료한 뒤 ① 앱 강제 종료 ② 비행기 모드 켜기, 두 경우 각각 재실행. 4단계 화면에서 시작하면 통과, 1단계로 돌아가면 실패 |
+| AC-4 | 정상 Normal | WHEN 사용자가 이메일 연습에서 목적(결석 사유·과제 기한 문의·면담 요청 중 하나)을 고르고 빈칸 4개(교수님 성함, 과목명, 사유, 날짜)를 채우면 THE 시뮬레이터는 SHALL 입력한 4개 값이 본문에 들어간, 제목·인사말·본문·서명 4요소로 구성된 완성 메일을 표시한다 | 신입생 3명에게 결석 사유 메일을 완성하게 하고 소요 시간 측정. 3명 모두 5분 이내에 4요소가 다 있는 메일을 얻고, 입력한 4개 값이 본문에 그대로 있으면 통과 (3주차 가정 4번 30분 이상의 대조 실험) |
+| AC-5 | 예외 Unwanted | IF 입력한 건물 약칭이나 호실 코드가 건물 목록에 없으면 THEN THE 시뮬레이터는 SHALL 찾을 수 없는 코드입니다 문구와 철자가 가장 비슷한 약칭 최대 3개를 표시한다 | 존재하지 않는 약칭 1개, 실제 약칭에서 한 글자 틀린 오타 1개를 입력. 두 경우 모두 안내 문구가 뜨고, 오타 입력에서는 원래 의도한 건물이 후보 3개 안에 있으면 통과 |
+| AC-6 | 선택 Optional | WHERE 언어 설정이 영어인 경우 THE 시뮬레이터는 SHALL 모든 안내 문구·규칙 설명·이메일 템플릿을 영어로 표시한다 | 언어를 영어로 바꾼 뒤 AC-1·AC-4·AC-5 절차를 반복. 화면에 한글만 남은 문구가 0개면 통과 (건물 정식 명칭은 한/영 병기 허용) |
 
 > 확인할 동작이 더 있으면 AC-4부터 행을 추가해 쓰십시오.
-> If there are more behaviors to check, add rows from AC-4.
-
-- [ ] 이번 활동에서 AI를 사용했다면 `PROMPTS.md`에 기록했습니다 / Logged any AI use in `PROMPTS.md`
+If there are more behaviors to check, add rows from AC-4.
+> 
+- [x]  이번 활동에서 AI를 사용했다면 `PROMPTS.md`에 기록했습니다 / Logged any AI use in `PROMPTS.md`
 
 ---
 
 > 수업 종료 시 커밋하세요 / Commit this at the end of class
-> `git add docs/week-04.md && git commit -m "docs: 4주차 활동지 작성"`
+`git add docs/week-04.md && git commit -m "docs: 4주차 활동지 작성"`
+>
