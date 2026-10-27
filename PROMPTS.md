@@ -484,3 +484,27 @@ graph LR
 
 - **버렸다면 왜 버렸는가** — 이 한 줄을 봅니다
   버리지않았음
+
+## [이슈 #5] 7주차 활동
+
+- 무엇을 하려고 썼는가
+
+  시스템아키텍쳐 그리기위해 사용
+  
+- 넣은 프롬프트 **원문 그대로** — 요약하지 않습니다
+
+  archify로 시스템 아키텍쳐 그려줘
+
+  계층 / Layer	모듈·파일 / Modules	의존하지 않는 것 / Does not depend on
+  표현 / Presentation		
+  로직 / Logic		
+  데이터 / Data
+  이것도 표 간략히 채워줘
+
+- 나온 것 중 **쓴 것 / 버린 것**
+
+<img width="1048" height="590" alt="image" src="https://github.com/user-attachments/assets/22a54430-4d3b-4627-b92c-bf4179dc7b1d" />
+
+
+- **버렸다면 왜 버렸는가** — 이 한 줄을 봅니다
+  버리지않았음
