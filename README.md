@@ -4,6 +4,7 @@
 > One line — whose problem does this solve?
 
 **배포 URL / Live URL:** (13주차에 작성 / add in Week 13)
+개발 레포 URL : https://github.com/oofrog/freshman-simulator
 
 ## 1. 문제 정의 / Problem Definition
 - 사용자 / Users:
