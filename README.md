@@ -3,8 +3,10 @@
 > 한 줄 소개 — 누구의 어떤 문제를 해결하는가
 > One line — whose problem does this solve?
 
-**배포 URL / Live URL:** (13주차에 작성 / add in Week 13)
-개발 레포 URL : https://github.com/oofrog/freshman-simulator
+**배포 URL / Live URL:** (13주차에 작성 / add in Week 13) 
+
+**개발 레포 URL :** [신입생 시뮬레이터](https://github.com/oofrog/freshman-simulator)
+
 
 ## 1. 문제 정의 / Problem Definition
 - 사용자 / Users:
